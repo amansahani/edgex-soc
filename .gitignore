@@ -10,3 +10,4 @@ tb_sim_dir/
 __pycache__/
 .pytest_cache/
 waves.db
+obj_dir/

@@ -19,3 +19,22 @@ Meta-rules distilled (all three are the same SV-vs-types trap):
 3. **Ports of the array are fine, but dynamic part-selects into packed vectors fed by always_comb get optimized to zero** in some paths — restructured the feeder as per-lane generate loops with genvar-constant slices.
 
 End state: 16/16 cosim vectors, 256/256 elements bit-exact, `pytest` green, ~76 s to rebuild `waves.db` for a 193 MB VCD via BTTF.
+
+## SoC integration — bugs found raising the NPU into PicoRV32
+
+Recorded after `scripts/build_demo.sh` turned green (`ALL TESTS PASSED`, cycle 24,800):
+
+| # | Symptom | Layer found | Root cause |
+|---|---|---|---|
+| 7 | First access to any address returns the *previous* address's data | memory pipeline | `ram_rdata <= ram[addr]` — registered read lags addr by 1 cycle; CPU samples rdata at mem_ready. Fixed: **async read** (`wire ram_rdata = ram[...]`) |
+| 8 | Each OUT char / NPU byte write fired **twice** | SoC bus handshake | `mem_valid` stays high 2 cycles (valid held until `mem_ready`) — side effects must be **rising-edge**: `wire v_rise = valid && !valid_d` |
+| 9 | NPU result garbage; `A_IDX`/`B_IDX` stuck at 0 | MMIO bridge | Off-by-one chain: side effects fired on the same edge the CPU sampled — the NPU's a_we/w_we hit after the idx had already been incremented. Fixed: **registered command latch** (`addr_r/wdata_r/wstrb_r` latched on `rise`; side effects on `rise1`; indices on `rise2`) |
+| 10 | C readback returned the *next* element | MMIO read path | `c_idx` incremented on the same edge the CPU sampled `rdata`. Fixed by the registered-latch pipeline + registered `rdata_q` (CPU samples the pre-increment value) |
+| 11 | `TRAP` never seen by testbench | SoC port map | `wire trap` existed internally but was **not exported as a port** — the TB's `trap` floated at 0. Fixed: export `trap` and `tests_passed` (also made them chip-level debug pins) |
+| 12 | `TIMEOUT` printed after `ALL TESTS PASSED` | testbench | `$finish` doesn't stop flow in Verilator's timing mode — needed an explicit `done` flag and a post-loop guard |
+
+A further timing rule crystallized here:
+
+1. **A 2-cycle `valid` window means every side effect must be rising-edge.**
+2. **Registered reads lag the address by one cycle — anything sampling them must wait.**
+3. **When in doubt about issue order, pipeline the command instead of arguing order** — the registered-latch shape eliminates the whole class of "who fires first at the edge" questions.
