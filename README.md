@@ -51,5 +51,5 @@ Infrastructure for Agentic Systems in Chip Design Verification*, NeurIPS 2026
 Workshop (AI for Chip Design), arXiv:2610.06790.
 ## License
 
-MIT (see LICENSE). RISC-V core: PicoRV32 (ISC). Testbench data: generated
-vectors (CC0, see vectors/).
+Apache-2.0 (see `LICENSE`). RISC-V core: PicoRV32 (ISC). Testbench data:
+generated vectors (CC0, see `vectors/`).
