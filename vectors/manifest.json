@@ -1,0 +1,82 @@
+[
+  {
+    "tag": "case_000",
+    "case_seed": 14431045733708096925,
+    "a_sha": "d818f83a1d51ee8f310fa1a3dcae67bd0e74027179040bd021d8c350b33d33c1"
+  },
+  {
+    "tag": "case_001",
+    "case_seed": 1898912090024755195,
+    "a_sha": "14ee23b8115010ed11e4edc69797cfc9202534666cad1765e5d259ac430c431e"
+  },
+  {
+    "tag": "case_002",
+    "case_seed": 14629457017143461749,
+    "a_sha": "a07157bba51beb193cba049f9aaaf78cc40db36b08b88787a6db4e6a65c4f44e"
+  },
+  {
+    "tag": "case_003",
+    "case_seed": 15973792330619690712,
+    "a_sha": "a34a2b641b300eda0a3ac68b3511c7701a41f4da5edfa15f578d24156427613b"
+  },
+  {
+    "tag": "case_004",
+    "case_seed": 16418182616685290236,
+    "a_sha": "b8a6f2f80d5e6f2fa22a44b52680ebf3b3dccd98d54a9c0434cb77b8ac8ffdd4"
+  },
+  {
+    "tag": "case_005",
+    "case_seed": 8426031515940663067,
+    "a_sha": "2c0b88c57650148d4fb516a478ff68b729af6a9def13ca7991ee287b6f235f58"
+  },
+  {
+    "tag": "case_006",
+    "case_seed": 14338325189296490160,
+    "a_sha": "63fe63f88b1158220f7256ffd563b150b1e9c5cc6746067e37f3b70424722923"
+  },
+  {
+    "tag": "case_007",
+    "case_seed": 6166630013001071200,
+    "a_sha": "2672d7b7c553d3bf0429d2e4239ebf6efaf64731fb6aa804038eb07910aa4ca7"
+  },
+  {
+    "tag": "case_008",
+    "case_seed": 17030418960892547246,
+    "a_sha": "afdef77053727f166147d2270a422ab6850e886a63c927a6c21da4c72b87339f"
+  },
+  {
+    "tag": "case_009",
+    "case_seed": 3251421276456280583,
+    "a_sha": "e5c20075f0877c3ac375a14bd8494ed7cf8c96f3d44790fde4133e28382f5305"
+  },
+  {
+    "tag": "case_010",
+    "case_seed": 14321263915995792327,
+    "a_sha": "293598af1603b6242825aebbf39bc53c56f1a2623b434c3bd76cb5f45b1967cc"
+  },
+  {
+    "tag": "case_011",
+    "case_seed": 18438142575719496104,
+    "a_sha": "2c2d2a9bfb3c993de8bdc41da5caeca1fe02a49a7ab46494b33b1df982f7b289"
+  },
+  {
+    "tag": "case_012",
+    "case_seed": 5174136489056498864,
+    "a_sha": "735ecde6c0fba6dc8add91a6dd4a93cef9a2ea9ae5967f09318448552fc85165"
+  },
+  {
+    "tag": "case_013",
+    "case_seed": 5523764398395589595,
+    "a_sha": "97ff87d8957a6c3fcd8caae9b67f4b5f54c32511ab0338d7e817ff6303e8b08d"
+  },
+  {
+    "tag": "case_014",
+    "case_seed": 2393793599171315021,
+    "a_sha": "91255e6a23ac3956df6bd44a121a0014e117449a062f902b69d9603faec127a1"
+  },
+  {
+    "tag": "case_015",
+    "case_seed": 6687941166793626345,
+    "a_sha": "2f9ec6d722a31a4d663f1d85cfecb8c4549e87c52d24c1c40a4fbc181e9b3bf2"
+  }
+]

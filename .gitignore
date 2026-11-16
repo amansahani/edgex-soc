@@ -1,0 +1,12 @@
+# Build artifacts
+vectors/*.hex
+vectors/report.txt
+tb/*.vcd
+tb/*.vvp
+tb/*.vcd.db
+tb/obj_dir/
+tb_sim_dir/
+*.pyc
+__pycache__/
+.pytest_cache/
+waves.db
