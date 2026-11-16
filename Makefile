@@ -1,10 +1,10 @@
-# EDGEX build helpers. Requires: verilator, python3 (numpy), ../bttf for waves.db queries.
+# EDGEX build helpers. Requires: verilator, python3 (numpy), bttf (optional, for waves queries).
 
-BTTF_BIN ?= /Users/amansahani/Desktop/personal/pyprojects/bin/bttf
+BTTF_BIN ?= bttf
 PYTHON   ?= python3
 NPU_TOP  := npu_top
 
-.PHONY: selftest vectors smoke pytest clean
+.PHONY: selftest vectors smoke pytest demo clean
 
 selftest:
 	$(PYTHON) golden/npu_model.py selftest
@@ -25,5 +25,8 @@ smoke: vectors
 pytest:
 	$(PYTHON) -m pytest tests/ -q
 
+demo:
+	./scripts/build_demo.sh
+
 clean:
-	rm -rf tb/obj_dir tb/*.vcd tb/waves.db vectors/*.hex vectors/report.txt
+	rm -rf tb/obj_dir obj_dir tb/*.vcd *.vcd vectors/*.hex vectors/report.txt dist/ build/ .pytest_cache __pycache__ tests/__pycache__ golden/__pycache__

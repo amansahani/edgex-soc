@@ -1,49 +1,55 @@
-# EDGEX — Edge-AI RISC-V SoC
+# EDGEX — Edge-AI RISC-V SoC (proof of concept)
 
-Open-PDK (sky130) prototype: PicoRV32-class RV32IMC core + 16×16 INT8 systolic NPU.
-Goal: highest realistic INT8 TOPS at minimum NRE cost, fully open toolchain, real fab at the end.
+Open-PDK (sky130) prototype: PicoRV32-class RV32IMC core + 16×16 INT8 systolic
+array, fully open toolchain from RTL to waves. Goal: realistic INT8 TOPS at
+minimum non-recurring engineering (NRE) cost, with a reproducible verification
+story baked in from day one.
 
-**Status:** NPU RTL skeleton works — 16×16 INT8 systolic, bit-exact vs the numpy golden model (256/256 elements, 16/16 seeds). See `docs/NPU_BRINGUP_DEBUG.md` for the bring-up debug log.
+**Status:** NPU RTL bit-exact against a numpy golden model (256/256 elements,
+all seeds); PicoRV32 + NPU SoC demo passes end-to-end (`scripts/build_demo.sh`).
+`verilator --binary --timing --trace-vcd` flow throughout; no proprietary tools.
 
 ```
 edge_ai_soc/
-├── SPEC.md              # project spec & plan (T1 tier)
-├── docs/                # NPU_SPEC.md (microarchitecture), FAB.md (tapeout plan), NPU_BRINGUP_DEBUG.md
-├── rtl/                 # synthesizable SystemVerilog (NPU: npu_pe, npu_array, npu_top)
-├── tb/                  # testbench (Verilator binary flow) — prints RESULT: PASS/FAIL
+├── SPEC.md              # project spec, TOPS/cost trade-offs, fab plan
+├── docs/                # NPU_SPEC.md (microarchitecture), FAB.md (tapeout plan),
+│                        #   NPU_BRINGUP_DEBUG.md (debug log)
+├── rtl/                 # synthesizable SystemVerilog (pe, array, top, mmio, soc)
+├── tb/                  # testbenches (Verilator binary flow)
 ├── golden/              # numpy golden model + cosim vector generator
-├── scripts/             # build/run helpers (verilator build, vector gen, bttf queries)
-├── tests/               # pytest: golden model + RTL cosim (skips if verilator missing)
-└── vectors/             # generated cosim vectors + expected outputs (git-ignored blobs)
+├── vectors/             # generated cosim vectors (hex, row-major)
+├── firmware/            # bare-metal demo firmware for the SoC
+├── scripts/             # build/run helpers
+└── tests/               # pytest: golden model + RTL cosim
 ```
 
 ## Quickstart
 
 ```bash
-# 1. golden model — check it standalone
-python3 golden/npu_model.py selftest
-
-# 2. generate cosim vectors (deterministic, seeded)
-python3 golden/cosim.py --seed 1 --n-tests 20
-
-# 3. build & run the RTL skeleton against them (requires verilator)
-make smoke
-
-# 4. full pytest suite
-python3 -m pytest tests/ -q
+python3 golden/npu_model.py selftest   # sanity-check the golden model
+make vectors                            # deterministic, seeded cosim vectors
+make smoke                              # Verilator → run all vectors, bit-exact check
+python3 -m pytest tests/ -q             # golden model + RTL cosim suite
+make demo                               # full PicoRV32 + NPU SoC boot (bit-exact end-to-end)
 ```
 
 ## Verification strategy
 
-RTL sims dump VCD → ingested by **BTTF** (`../bttf`) into `waves.db` → deterministic
-SVA + agentic queries. Golden vectors are bit-exact: RTL output must equal
-`vectors/*/expected.hex` for every seed. Coverage gate: ≥ 80 % toggle coverage
-(`get_scope_toggle_coverage`), `ASSERT_KNOWN` on NPU handshake.
+RTL sims dump VCD → ingested into `waves.db` (relational store; see the BTTF
+paper below) → deterministic SVA checks + agentic queries. Golden vectors are
+bit-exact: RTL output must equal `vectors/*/expected_c.hex` for every seed.
+Gate-level checks use `ASSERT_KNOWN` on the NPU handshake and a toggle-coverage
+gate.
 
-## Reproduce from clean checkout
+## Citation
 
-```bash
-git clone <this-repo> edge_ai_soc && cd edge_ai_soc
-/Users/amansahani/Desktop/personal/pyprojects/bin/pip install -e .  # (not required: no package)
-make smoke && python3 -m pytest tests/ -q
-```
+The verification philosophy (waveforms-as-relational-store + agentic
+verification) is directly inspired by:
+
+Je Yang, Ivan Lobov, Thomas Karpati, *Back to the Future: Rethinking EDA
+Infrastructure for Agentic Systems in Chip Design Verification*, NeurIPS 2026
+Workshop (AI for Chip Design), arXiv:2610.06790.
+## License
+
+MIT (see LICENSE). RISC-V core: PicoRV32 (ISC). Testbench data: generated
+vectors (CC0, see vectors/).

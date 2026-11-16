@@ -1,13 +1,17 @@
-# Build artifacts
+# build / simulation
+obj_dir/
+__pycache__/
+*.pyc
+*.vcd
+*.db
+*.vcd.db
+*.elf
+*.bin
 vectors/*.hex
 vectors/report.txt
-tb/*.vcd
-tb/*.vvp
-tb/*.vcd.db
 tb/obj_dir/
-tb_sim_dir/
-*.pyc
-__pycache__/
-.pytest_cache/
+tb/*.vcd
 waves.db
-obj_dir/
+.pytest_cache/
+build/
+dist/
